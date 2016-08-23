@@ -1,3 +1,4 @@
+# WP
 *.log
 wp-config.php
 wp-content/advanced-cache.php
@@ -16,3 +17,12 @@ wp-content/plugins/hello.php
 /sitemap.xml
 /sitemap.xml.gz
 
+# Miscellaneous
+.DS_Store
+Thumbs.db
+.idea/
+node_modules/
+
+# Framework
+vendor/
+composer.lock
