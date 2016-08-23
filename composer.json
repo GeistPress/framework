@@ -1,0 +1,22 @@
+{
+    "name": "geistpress/framework",
+    "description": "The GeistPress framework.",
+    "keywords": ["geistpress", "framework", "WordPress", "plugin"],
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "Pascal Kleindienst",
+            "email": "mail@pascalkleindienst.de"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "GeistPress\\": "src/"
+        }
+    },
+    "type": "wordpress-plugin",
+    "require": {
+        "php": ">=5.5.9",
+        "composer/installers": "^1.0"
+    }
+}
