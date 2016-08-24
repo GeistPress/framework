@@ -3,8 +3,21 @@ namespace GeistPress\Config;
 
 use Symfony\Component\Finder\Finder;
 
+/**
+ * Class ConfigFinder
+ * @package GeistPress\Config
+ */
 class ConfigFinder
 {
+    /**
+     * @var string
+     */
+    protected $path;
+    
+    /**
+     * Set config root path
+     * @param string $path
+     */
     public function __construct($path)
     {
         $this->path = $path;
@@ -17,6 +30,7 @@ class ConfigFinder
      */
     public function getFiles($environment = null)
     {
+        // check path
         $path = $this->path;
         
         if ($environment) {
@@ -26,7 +40,8 @@ class ConfigFinder
         if (!is_dir($path)) {
             return [];
         }
-        
+    
+        // get php files
         $files = [];
         $phpFiles = Finder::create()->files()->name('*.php')->in($path)->depth(0);
         
