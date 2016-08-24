@@ -2,6 +2,7 @@
 namespace GeistPress\Foundation;
 
 use Illuminate\Container\Container;
+use Illuminate\Support\ServiceProvider;
 
 /**
  * Class Application
@@ -14,6 +15,12 @@ class Application extends Container
      * @var array
      */
     protected $paths = [];
+    
+    /**
+     * The loaded service providers.
+     * @var array
+     */
+    protected $loadedProviders = [];
     
     /**
      * Directory of the theme
@@ -37,6 +44,32 @@ class Application extends Container
     {
         $this->themeDir = $themeDir;
         $this->setupPaths();
+        $this->registerProviders();
+        
+        // Config load
+        $this['config']->load();
+    }
+    
+    /**
+     * Register a service provider with the application.
+     * @param \Illuminate\Support\ServiceProvider|string $provider
+     */
+    public function register($provider)
+    {
+        // init Provider
+        if (!$provider instanceof ServiceProvider) {
+            $provider = new $provider($this);
+        }
+        
+        // already loaded
+        if (array_key_exists($providerName = get_class($provider), $this->loadedProviders)) {
+            return;
+        }
+        
+        // register provider
+        $this->loadedProviders[$providerName] = true;
+        $provider->register();
+        $provider->boot();
     }
     
     /**
@@ -49,5 +82,23 @@ class Application extends Container
             'storage' => GEISTPRESS_STORAGE,
             'config'  => $this->themeDir . DS . 'resources' . DS . 'config' . DS,
         ];
+    
+        foreach ($this->paths as $key => $path) {
+            $this->instance('path.'.$key, $path);
+        }
+    }
+    
+    /**
+     * Register framework service providers.
+     */
+    protected function registerProviders()
+    {
+        $providers = apply_filters('geistpress_service_providers', [
+            \GeistPress\Config\ConfigServiceProvider::class
+        ]);
+        
+        foreach ($providers as $provider) {
+            $this->register($provider);
+        }
     }
 }
