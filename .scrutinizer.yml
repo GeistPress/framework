@@ -49,3 +49,7 @@ tools:
 
     # Security Advisory Checker
     sensiolabs_security_checker: true
+
+    # Code Coverage
+    external_code_coverage:
+        timeout: 900

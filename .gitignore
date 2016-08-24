@@ -22,6 +22,7 @@ wp-content/plugins/hello.php
 Thumbs.db
 .idea/
 node_modules/
+build/
 
 # Framework
 vendor/
