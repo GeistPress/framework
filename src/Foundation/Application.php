@@ -2,6 +2,7 @@
 namespace GeistPress\Foundation;
 
 use Illuminate\Container\Container;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -45,9 +46,46 @@ class Application extends Container
         $this->themeDir = $themeDir;
         $this->setupPaths();
         $this->registerProviders();
+    
+        // register dispatches
+        $this->singleton('events', function ($app) {
+            return new Dispatcher($app);
+        });
         
         // Config load
         $this['config']->load();
+    }
+    
+    /**
+     * Initialize the paths.
+     */
+    protected function setupPaths()
+    {
+        $this->paths = [
+            'core'    => __DIR__ . DS . '..' . DS,
+            'storage' => GEISTPRESS_STORAGE,
+            'config'  => $this->themeDir . DS . 'resources' . DS . 'config' . DS,
+            'views'   => $this->themeDir . DS . 'resources' . DS . 'views' . DS,
+        ];
+    
+        foreach ($this->paths as $key => $path) {
+            $this->instance('path.'.$key, $path);
+        }
+    }
+    
+    /**
+     * Register framework service providers.
+     */
+    protected function registerProviders()
+    {
+        $providers = apply_filters('geistpress_service_providers', [
+            \GeistPress\Config\ConfigServiceProvider::class,
+            \GeistPress\View\ViewServiceProvider::class,
+        ]);
+        
+        foreach ($providers as $provider) {
+            $this->register($provider);
+        }
     }
     
     /**
@@ -70,35 +108,5 @@ class Application extends Container
         $this->loadedProviders[$providerName] = true;
         $provider->register();
         $provider->boot();
-    }
-    
-    /**
-     * Initialize the paths.
-     */
-    protected function setupPaths()
-    {
-        $this->paths = [
-            'core'    => __DIR__ . DS . '..' . DS,
-            'storage' => GEISTPRESS_STORAGE,
-            'config'  => $this->themeDir . DS . 'resources' . DS . 'config' . DS,
-        ];
-    
-        foreach ($this->paths as $key => $path) {
-            $this->instance('path.'.$key, $path);
-        }
-    }
-    
-    /**
-     * Register framework service providers.
-     */
-    protected function registerProviders()
-    {
-        $providers = apply_filters('geistpress_service_providers', [
-            \GeistPress\Config\ConfigServiceProvider::class
-        ]);
-        
-        foreach ($providers as $provider) {
-            $this->register($provider);
-        }
     }
 }
