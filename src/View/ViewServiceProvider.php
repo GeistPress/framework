@@ -152,6 +152,7 @@ class ViewServiceProvider extends IlluminateViewServiceProvider
     public function boot()
     {
         $this->registerMarkupTags();
+        $this->registerTemplateHierarchy();
     }
     
     /**
@@ -172,5 +173,20 @@ class ViewServiceProvider extends IlluminateViewServiceProvider
         foreach ($functions as $name => $func) {
             $twig->addFunction(new \Twig_SimpleFunction($name, $func));
         }
+    }
+    
+    /**
+     * Register Wordpress Template Hierarchy for twig files
+     */
+    protected function registerTemplateHierarchy()
+    {
+        // register template finder
+        $this->app->singleton('templateHierarchy.finder', function ($app) {
+            return new TemplateFinder($app['view']);
+        });
+        
+        $this->app->singleton('templateHierarchy', function ($app) {
+            return new TemplateHierarchy($app['view'], $app['templateHierarchy.finder']);
+        });
     }
 }

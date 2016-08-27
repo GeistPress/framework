@@ -54,6 +54,9 @@ class Application extends Container
         
         // Config load
         $this['config']->load();
+    
+        // init template hierarchy
+        add_filter('template_include', [$this['templateHierarchy'], 'make']);
     }
     
     /**
