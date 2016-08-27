@@ -3,7 +3,7 @@ namespace GeistPress\Tests\Config;
 
 use GeistPress\Config\ConfigFinder;
 
-class ConfigTest extends \PHPUnit_Framework_TestCase
+class ConfigFinderTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \GeistPress\Config\ConfigFinder
