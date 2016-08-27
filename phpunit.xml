@@ -14,9 +14,14 @@
     </php>
     <testsuites>
         <testsuite name="GeistPress framework test suite">
-            <directory suffix="Test.php">./tests/</directory>
+            <directory suffix="Test.php">tests</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src/</directory>
+        </whitelist>
+    </filter>
     <logging>
         <log type="tap" target="build/report.tap"/>
         <log type="junit" target="build/report.junit.xml"/>

@@ -27,3 +27,4 @@ build/
 # Framework
 vendor/
 composer.lock
+tmp/
